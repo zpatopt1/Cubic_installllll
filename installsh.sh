@@ -106,15 +106,6 @@ curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 apt install -y nodejs
 npm install -g typescript
 
-
-# Instalar EXTRAS
-apt update
-apt install -y build-essential gdb python3 python3-pip python3-venv curl
-# Node.js LTS + npm
-curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-apt install -y nodejs
-npm install -g typescript
-
 #Instalar DOCKER ENGINE
 # Pacotes básicos
 apt update
