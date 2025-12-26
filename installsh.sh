@@ -1,9 +1,8 @@
 #!/bin/bash
-set -e
-
 echo "==== Iniciando customização ===="
 # Atualiza pacotes
-apt update && apt upgrade -y
+apt update
+apt upgrade -y
 
 # Remove o Haruna completamente
 apt remove --purge haruna -y
@@ -18,11 +17,10 @@ apt install -y qbittorrent
 apt install -y git
 
 # Instala SPOTIFY
-apt install -y curl apt-transport-https gnupg
 curl -sS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb https://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list
-apt update 
-apt install -y spotify-client
+apt update
+apt install spotify-client
 
 # Instalar BEEKEPER
 # Install our GPG key
@@ -93,10 +91,10 @@ apt install -y /tmp/heroic.deb || apt -f install -y
 # Instalar VSCODIUM
 wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
     | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+    | dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
 
 echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
-| sudo tee /etc/apt/sources.list.d/vscodium.sources
+| tee /etc/apt/sources.list.d/vscodium.sources
 
 # Instalar EXTRAS
 apt update
