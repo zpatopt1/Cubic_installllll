@@ -1,0 +1,297 @@
+PRIMEIRO ATUALIZAR O SISTEMA ANTES DE TUDO
+apt update && apt upgrade -y
+
+FORMAS DE INSTALAÇAO UTILIZADAS NORMALMENTE CUSTUMAM SER NA POS INSTALAÇÃO:
+SNAP:
+apt update
+
+apt install -y snapd
+
+systemctl enable snapd.socket
+systemctl enable snapd
+
+cria link ln -s /var/lib/snapd/snap /snap
+
+snap install core
+snap refresh core
+
+snap install nome-do-app
+ex:snap install chromium
+ex:snap install postman
+
+ver lista snap list
+
+limpeza snap clean
+
+
+FLATPAKS:
+apt update
+
+apt install -y flatpak plasma-discover-backend-flatpak
+
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+verificar flatpak remotes
+
+flatpak install --system -y flathub ID.DO.APP
+
+ex: flatpak install --system -y flathub io.gitlab.librewolf-community 
+ex:flatpak install --system -y flathub com.spotify.Client
+
+ver lista flatpak list
+
+limpeza nsei se é preciso flatpak uninstall --unused -y
+			  flatpak repair
+
+
+INTERNAMENTE
+APT:
+sudo apt install …
+
+
+
+VER APPS:
+snap list | grep firefox (for Snap)
+apt list --installed | grep firefox (for .deb)
+flatpak list
+.deb
+tar.gz
+appimages
+
+
+REMOVER APPS 
+SNAPS:   sudo snap remove firefox  
+APT:     sudo apt remove --purge firefox -y  
+         sudo apt remove --purge haruna -y
+FLATPAK: flatpak list 
+	 flatpak uninstall --delete-data <appid> 
+	 flatpak uninstall --unused
+
+ADICIONAR APPS
+LIBREWOLF - É UMA VERSAO MELHOR DO FIREFOX COM ADBLOCK INTEGRAADO, É UM FORK DO FIREFOX
+- FLATPAK É UMA APP EMPACOTADA QUE NAO DEPENDE DO SISTEMA , NORMALMENTE USADO PARA APPS FECHADAS E GRANDES E É MAIS ESTAVEL
+- Porque Flatpak funciona igual em qualquer sistema, não quebra dependências e é ideal para ISOs personalizadas.
+sudo apt update && sudo apt install extrepo -yvl
+sudo extrepo enable librewolf
+sudo apt update && sudo apt install librewolf -y
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LEITOR MULTIMEDIA HARUNA(MPV)- JA VEM INSTALADO, NSEI SE É BOM , ENTAO:
+- DOU REPLACE NELE
+- ESCOLHO HARUNA(MPV) OU VLC, DEIXO OS 2 LA
+apt install vlc -y
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TRANSMISSION/qbittorrent - PARA INSTALAR FICHEIROS TIPO UM UTORRENT
+apt install qbittorrent -y
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SPOTIFY
+curl -sS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+sudo apt-get update && sudo apt-get install spotify-client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+POSTMAN
+# 1️⃣ Baixar o pacote tar.gz
+wget https://dl.pstmn.io/download/latest/linux64 -O postman.tar.gz
+
+# 2️⃣ Extrair para /opt
+tar -xzf postman.tar.gz -C /opt
+
+# 3️⃣ Renomear (opcional, deixa mais organizado)
+mv /opt/Postman /opt/postman
+
+# 4️⃣ Criar link simbólico para facilitar execução
+ln -s /opt/postman/Postman /usr/local/bin/postman
+
+# 5️⃣ Remover o arquivo compactado
+rm postman.tar.gz
+
+INICIA postman
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GITHUB
+apt install git -y
+
+
+#PARA GAMES
+https://guides.hakedev.com/wiki/ubuntu/nvidia-drivers-latest/
+INSTALAR DRIVERS E VULKAN
+apt update && apt upgrade -y
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt update
+sudo ubuntu-drivers list/devices
+sudo apt install nvidia-driver-<DRIVER VERSION>
+sudo ubuntu-drivers install faz automaticante a instalação e escolhe sozinho
+sudo reboot now
+nvidia-smi
+
+INSTLAR WINE
+https://www.cherryservers.com/blog/install-wine-ubuntu
+sudo apt update && sudo apt upgrade -y
+sudo mkdir -pm755 /etc/apt/keyrings
+sudo wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key -
+sudo dpkg --add-architecture i386
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+sudo apt update
+sudo apt install --install-recommends winehq-stable -y
+wine --version
+
+INSTALAR PROTON
+https://github.com/flathub/com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo # ADICIONA A LOJA DE FLATPAKS
+flatpak install com.valvesoftware.Steam.CompatibilityTool.Proton-GE
+
+INSTALAR STEAM
+sudo apt install -y steam
+
+INSTALAR HEROIC GAMES 
+# Baixar AppImage
+wget https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/2.9.1/Heroic-2.9.1.AppImage -O /opt/Heroic.AppImage
+
+# Tornar executável
+chmod +x /opt/Heroic.AppImage
+
+# Criar link simbólico
+ln -s /opt/Heroic.AppImage /usr/local/bin/heroic
+
+
+MINECRAFT
+INSTALAR JAVA
+sudo apt update
+sudo apt install openjdk-17-jdk wget gdebi-core -y
+java -version
+INSTALAR LAUNCHER
+sudo apt update && sudo apt upgrade -y
+wget https://launcher.mojang.com/download/Minecraft.deb -O minecraft-launcher.deb
+sudo gdebi minecraft-launcher.deb
+CASO DEIA ERRO sudo apt install -y gdebi-core
+
+
+LUNAR CLIENT
+wget "https://api.lunarclientprod.com/site/download?os=linux" -O /opt/LunarClient.AppImage
+chmod +x /opt/LunarClient.AppImage
+
+
+
+INSTALAR VIRTUAL MACHINE GESTOR
+apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager
+
+
+
+VSCODE 
+sudo apt update && sudo apt upgrade -y
+
+# -----------------------------
+# 1️⃣ Instalar Python
+# -----------------------------
+sudo apt install -y python3 python3-pip python3-venv
+
+# -----------------------------
+# 2️⃣ Instalar Node.js e TypeScript
+# -----------------------------
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g typescript
+
+# -----------------------------
+# 3️⃣ Instalar compiladores C/C++
+# -----------------------------
+sudo apt install -y build-essential gdb
+
+# -----------------------------
+# 4️⃣ Instalar dependências e VS Code
+# -----------------------------
+sudo apt install -y wget gpg
+
+# Adicionar repositório Microsoft para VS Code
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+
+# Instalar VS Code
+sudo apt update
+sudo apt install -y code
+
+# -----------------------------
+# 5️⃣ Instalar extensões essenciais do VS Code
+# -----------------------------
+# Python e Jupyter
+code --install-extension ms-python.python
+code --install-extension ms-toolsai.jupyter
+
+# C/C++
+code --install-extension ms-vscode.cpptools
+
+# Node.js/TypeScript
+code --install-extension esbenp.prettier-vscode
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension ms-vscode.vscode-typescript-next
+
+# Extras úteis
+code --install-extension ms-python.vscode-pylance      # IntelliSense avançado Python
+code --install-extension eamodio.gitlens               # Git avançado
+code --install-extension formulahendry.code-runner     # Rodar snippets de código rapidamente
+code --install-extension vscode-icons-team.vscode-icons # Ícones no Explorer
+
+# -----------------------------
+# 6️⃣ Finalização
+# -----------------------------
+echo "=========================================="
+echo "Instalação concluída!"
+echo "VS Code, Python, Node.js, TypeScript, C/C++ e extensões essenciais instaladas."
+echo "------------------------------------------"
+echo "Lembre-se de verificar as versões:"
+echo "Python: python3 --version"
+echo "Node.js: node -v | npm -v | tsc -v"
+echo "C/C++: gcc --version | g++ --version"
+echo "VS Code: code --version"
+echo "=========================================="
+
+
+ISTALAR beekeper
+
+# Install our GPG key
+curl -fsSL https://deb.beekeeperstudio.io/beekeeper.key | sudo gpg --dearmor --output /usr/share/keyrings/beekeeper.gpg \
+  && sudo chmod go+r /usr/share/keyrings/beekeeper.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/beekeeper.gpg] https://deb.beekeeperstudio.io stable main" \
+  | sudo tee /etc/apt/sources.list.d/beekeeper-studio-app.list > /dev/null
+
+
+# Update apt and install
+sudo apt update && sudo apt install beekeeper-studio -y
+DOCKER DESKTOP 
+# Add Docker's official GPG key:
+sudo apt update
+sudo apt install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+sudo apt update
+mkdir -p /opt/installers
+cd /opt/installers
+
+sudo wget https://desktop.docker.com/linux/main/amd64/docker-desktop-amd64.deb
+sudo apt install -y ./docker-desktop-amd64.deb
+
+
+
+
+….
+
+JA VEIO LIBREOFICEA INSTALADO um Windows office para Linux opensource então não adicionamos nada.
+PARA O DESKTOP ENVIRMENT....não vou mexer em nada porque em questão da interface gráfica eu instalei diretamente o kubuntu com kde plasma 5 , que já vem com 99% do visual e alguma apps já instaladas como o KWin (gerenciador de janelas), Konsole (gerenciador de consola) e outras 
+tudo isto foi modificado/colocado no chroot
+chroot um mecanismo "diretório raiz" e é onde nos podemos criar as modificações e adiciçoes dos programas 

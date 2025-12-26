@@ -1,0 +1,172 @@
+#!/bin/bash
+set -e
+
+echo "===== ATUALIZANDO SISTEMA ====="
+apt update && apt upgrade -y
+
+echo "===== REMOVER FIREFOX E INSTALAR LIBREWOLF ====="
+apt remove --purge firefox -y 
+apt update
+apt install extrepo -y
+extrepo enable librewolf
+apt update
+apt install librewolf -y
+ 
+
+echo "===== REMOVER HARUNA E INSTALAR VLC ====="
+apt remove --purge haruna -y 
+apt install -y vlc
+
+echo "===== INSTALAR QBittorrent ====="
+apt install -y qbittorrent
+
+echo "===== INSTALAR GIT ====="
+apt install -y git
+
+echo "===== INSTALAR SPOTIFY ====="
+apt-get install apt-transport-https curl
+curl -sS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+echo "deb https://repository.spotify.com stable non-free" \
+ > /etc/apt/sources.list.d/spotify.list
+apt-get update
+apt-get install spotify-client
+
+
+echo "===== INSTALAR BEEKEEPER STUDIO ====="
+curl -fsSL https://deb.beekeeperstudio.io/beekeeper.key \
+ | gpg --dearmor -o /usr/share/keyrings/beekeeper.gpg
+chmod go+r /usr/share/keyrings/beekeeper.gpg
+echo "deb [signed-by=/usr/share/keyrings/beekeeper.gpg] https://deb.beekeeperstudio.io stable main" \
+ > /etc/apt/sources.list.d/beekeeper-studio.list
+apt update
+apt install -y beekeeper-studio
+
+
+echo "===== INSTALAR POSTMAN ====="
+apt install -y libssl-dev wget
+wget https://dl.pstmn.io/download/latest/linux64 -O /tmp/postman.tar.gz
+tar -xzf /tmp/postman.tar.gz -C /opt
+rm postman.tar.gz
+ln -s /opt/Postman/Postman /usr/local/bin/postman
+
+cat <<EOF > /usr/share/applications/postman.desktop
+[Desktop Entry]
+Name=Postman
+Comment=API Development Environment
+Exec=/opt/Postman/Postman
+Icon=/opt/Postman/app/resources/app/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Development;
+EOF
+chmod +x /usr/bin/postman
+chmod +x /opt/Postman/Postman
+
+echo "===== INSTALAR DRIVERS ====="
+apt update && apt upgrade -y
+add-apt-repository ppa:graphics-drivers/ppa
+apt update
+ubuntu-drivers install
+
+
+
+echo "===== INSTALAR WINE ====="
+apt update && apt upgrade -y && apt install wget -y
+mkdir -pm755 /etc/apt/keyrings
+wget -O - https://dl.winehq.org/wine-builds/winehq.key |  gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key
+dpkg --add-architecture i386
+wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+apt update
+apt install --install-recommends winehq-stable -y
+
+echo "===== INSTALAR STEAM ====="
+apt install -y steam
+
+echo "===== INSTALAR HEROIC GAMES ====="
+wget https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v2.18.1/Heroic-2.18.1-linux-amd64.deb -O /tmp/heroic.deb
+apt update
+apt install -y /tmp/heroic.deb || apt -f install -y
+
+echo "===== INSTALAR JAVA + MINECRAFT ====="
+apt install -y openjdk-17-jdk gdebi-core
+apt update && apt upgrade -y
+wget https://launcher.mojang.com/download/Minecraft.deb -O /tmp/minecraft.deb
+apt install -y gdebi-core
+gdebi -n /tmp/minecraft.deb
+
+echo "===== INSTALAR Lunarclient ====="
+apt update 
+wget "https://api.lunarclientprod.com/site/download?os=linux" -O /opt/LunarClient.AppImage
+chmod +x /opt/LunarClient.AppImage
+/opt/LunarClient.AppImage --appimage-extract
+mv squashfs-root /opt/lunarclient
+ln -s /opt/lunarclient/AppRun /usr/bin/lunarclient
+chown root /opt/lunarclient/chrome-sandbox
+chmod 4755 /opt/lunarclient/chrome-sandbox
+find /opt/lunarclient -type d -exec chmod 755 {} \;
+
+
+cat <<'EOF' > /usr/share/applications/lunarclient.desktop
+[Desktop Entry]
+Encoding=UTF-8
+Name=Lunar Client
+Comment=Lunar Client for Minecraft
+Exec=/opt/lunarclient/AppRun
+Icon=/opt/LunarClient.AppImage
+Terminal=false
+Type=Application
+Categories=Game;
+EOF
+
+
+
+echo "===== INSTALAR VSCODE ====="
+apt update && apt upgrade -y
+wget -O /opt/code.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"	
+apt install -y /opt/code.deb
+echo "code code/add-microsoft-repo boolean true" | debconf-set-selections
+apt-get install wget gpg &&
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg &&
+install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg &&
+rm -f microsoft.gpg
+mkdir /etc/apt/sources.list.d/vscode.source
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64,arm64,armhf
+Signed-By: /usr/share/keyrings/microsoft.gpg
+apt install apt-transport-https &&
+apt update &&
+apt install code 
+
+
+echo "===== EXTRAS DEV ====="
+apt install -y build-essential gdb python3 python3-pip python3-venv nodejs npm
+npm install -g typescript
+apt update
+apt install -y build-essential gdb
+apt install -y python3 python3-pip python3-venv
+curl -fsSL https://deb.nodesource.com/setup_lts.x |  -E bash -
+apt install -y nodejs
+apt install npm
+npm install -g typescript
+
+
+echo "===== INSTALAR DOCKER ====="
+apt install -y ca-certificates curl
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+
+cat <<EOF > /etc/apt/sources.list.d/docker.sources
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+apt update
+apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+systemctl enable Docker
