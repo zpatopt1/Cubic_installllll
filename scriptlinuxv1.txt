@@ -1,7 +1,4 @@
 #!/bin/bash
-set -e
-
-echo "==== Iniciando customização ===="
 # Atualiza pacotes
 apt update && apt upgrade -y
 
@@ -69,10 +66,35 @@ gdebi -n /tmp/minecraft.deb
 rm /tmp/minecraft.deb
 
 # Instalar LUNARCLIENT
+#Versao inicial 
 apt update 
 wget "https://api.lunarclientprod.com/site/download?os=linux" -O /opt/LunarClient.AppImage
 chmod +x /opt/LunarClient.AppImage
 ln -s /opt/LunarClient.AppImage /usr/bin/lunarclient
+
+apt update 
+wget "https://api.lunarclientprod.com/site/download?os=linux" -O /opt/LunarClient.AppImage
+chmod +x /opt/LunarClient.AppImage
+/opt/LunarClient.AppImage --appimage-extract
+mv squashfs-root /opt/lunarclient
+ln -s /opt/lunarclient/AppRun /usr/bin/lunarclient
+chown root /opt/lunarclient/chrome-sandbox
+chmod 4755 /opt/lunarclient/chrome-sandbox
+find /opt/lunarclient -type d -exec chmod 755 {} \;
+
+cat <<'EOF' > /usr/share/applications/lunarclient.desktop
+[Desktop Entry]
+Encoding=UTF-8
+Name=Lunar Client
+Comment=Lunar Client for Minecraft
+Exec=/opt/lunarclient/AppRun
+Icon=/opt/LunarClient.AppImage
+Terminal=false
+Type=Application
+Categories=Game;
+EOF
+chmod +x /usr/share/applications/lunarclient.desktop
+
 
 # Instalar Wine
 apt update
@@ -90,13 +112,32 @@ wget https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/downl
 apt update
 apt install -y /tmp/heroic.deb || apt -f install -y
 
-# Instalar VSCODIUM
-wget -qO - https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
-    | gpg --dearmor \
-    | sudo dd of=/usr/share/keyrings/vscodium-archive-keyring.gpg
+# Instalar VSCODE
+apt update
+apt install -y wget gpg apt-transport-https
 
-echo -e 'Types: deb\nURIs: https://download.vscodium.com/debs\nSuites: vscodium\nComponents: main\nArchitectures: amd64 arm64\nSigned-by: /usr/share/keyrings/vscodium-archive-keyring.gpg' \
-| sudo tee /etc/apt/sources.list.d/vscodium.sources
+wget -O /opt/code.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"	
+apt install -y /opt/code.deb
+rm -f /opt/code.deb
+
+echo "code code/add-microsoft-repo boolean true" | debconf-set-selections
+
+apt-get install wget gpg &&
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg &&
+install -D -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/microsoft.gpg &&
+rm -f microsoft.gpg
+
+cat <<EOF > /etc/apt/sources.list.d/vscode.sources
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64,arm64,armhf
+Signed-By: /usr/share/keyrings/microsoft.gpg
+EOF
+
+apt update &&
+apt install code 
 
 # Instalar EXTRAS
 apt update
@@ -131,7 +172,64 @@ apt update
 apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
-apt autoremove -y
-apt clean
+# Instalar STEAM
+apt update
+apt install -y software-properties-common wget gnupg
+add-apt-repository -y multiverse
+# Habilitar arquitetura 32-bit necessária para jogos
+dpkg --add-architecture i386
+apt update
+apt install -y steam mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 
-echo "==== Finalizado com sucesso ===="
+
+
+# Instalar DRIVERS
+apt update 
+apt install software-properties-common
+add-apt-repository -y ppa:graphics-drivers/ppa
+apt update
+
+
+
+# SCRIPT PARA INSTALAR OS DRIVERS
+cat <<'EOF' > /usr/local/bin/install-drivers.sh
+#!/bin/bash
+set -e
+# Atualiza lista de pacotes
+apt update
+# Instala automaticamente drivers detectados
+ubuntu-drivers install
+
+systemctl disable install-drivers.service
+# Remove este script após a execução
+rm -f /usr/local/bin/install-drivers.sh
+EOF
+
+chmod +x /usr/local/bin/install-drivers.sh
+
+cat <<'EOF' > /etc/systemd/system/install-drivers.service
+[Unit]
+Description=Instalar drivers automaticamente no primeiro boot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/install-drivers.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+# Habilitar o serviço
+systemctl enable install-drivers.service
+
+
+
+
+
+
+
+
+
