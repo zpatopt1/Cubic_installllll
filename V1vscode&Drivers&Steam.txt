@@ -70,9 +70,6 @@ wget "https://api.lunarclientprod.com/site/download?os=linux" -O /opt/LunarClien
 chmod +x /opt/LunarClient.AppImage
 ln -s /opt/LunarClient.AppImage /usr/bin/lunarclient
 
-apt update 
-wget "https://api.lunarclientprod.com/site/download?os=linux" -O /opt/LunarClient.AppImage
-chmod +x /opt/LunarClient.AppImage
 /opt/LunarClient.AppImage --appimage-extract
 mv squashfs-root /opt/lunarclient
 ln -s /opt/lunarclient/AppRun /usr/bin/lunarclient
@@ -214,6 +211,8 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/install-drivers.sh
+RemainAfterExit=no
+
 
 [Install]
 WantedBy=multi-user.target
@@ -224,6 +223,7 @@ systemctl enable install-drivers.service
 
 apt autoremove -y
 apt clean
+
 
 
 
