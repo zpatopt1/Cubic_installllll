@@ -16,9 +16,6 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 # 3 Instalar Discord (Snap)
 snap install discord
 
-# 4 Instalar Steam (Flatpak)
-flatpak install -y flathub com.valvesoftware.Steam
-
 # 5 Instalar Proton-GE (Flatpak)
 flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 
