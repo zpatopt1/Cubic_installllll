@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "==== Iniciando customização ===="
 # Atualiza pacotes
 apt update
 apt upgrade -y
@@ -191,3 +192,5 @@ apt install -y steam
 
 apt autoremove -y
 apt clean
+
+echo "==== Finalizado com sucesso ===="
