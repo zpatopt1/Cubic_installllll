@@ -166,25 +166,21 @@ EOF
 apt update
 apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-
-# Instalar STEAM
-apt update
+# Instalar STEAM + SUPORTE GRAFICO/PREPARAR DRIVERS =====
 apt install -y software-properties-common wget gnupg
 add-apt-repository -y multiverse
-# Habilitar arquitetura 32-bit necessária para jogos
+add-apt-repository -y ppa:graphics-drivers/ppa
 dpkg --add-architecture i386
 apt update
-apt install -y steam mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 
+# Mesa (Intel/AMD) + Vulkan + 32-bit
+apt install -y mesa-vulkan-drivers mesa-utils mesa-vulkan-drivers:i386 libgl1-mesa-dri:i386
 
+# Steam
+apt install -y steam
 
-# Instalar DRIVERS
-apt update 
-apt install software-properties-common
-add-apt-repository -y ppa:graphics-drivers/ppa
-apt update
-
-
+apt autoremove -y
+apt clean
 
 # SCRIPT PARA INSTALAR OS DRIVERS
 cat <<'EOF' > /usr/local/bin/install-drivers.sh
@@ -221,8 +217,8 @@ EOF
 # Habilitar o serviço
 systemctl enable install-drivers.service
 
-apt autoremove -y
-apt clean
+
+
 
 
 
