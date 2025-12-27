@@ -161,6 +161,7 @@ apt install -y mesa-vulkan-drivers mesa-utils mesa-vulkan-drivers:i386 libgl1-me
 
 # Steam
 apt install -y steam
+
 # Baixar postinstall.sh para rodar no primeiro boot
 wget -O /usr/local/bin/postinstall.sh https://raw.githubusercontent.com/zpatopt1/Cubic_installllll/main/postinstall.sh
 chmod +x /usr/local/bin/postinstall.sh
