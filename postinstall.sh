@@ -1,5 +1,4 @@
 #!/bin/bash
-set -euo pipefail
 
 echo " Post-install Linux Script"
 
