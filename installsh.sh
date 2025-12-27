@@ -34,8 +34,6 @@ echo "deb [signed-by=/usr/share/keyrings/beekeeper.gpg] https://deb.beekeeperstu
 # Update apt and install Beekeeper Studio
 apt update && apt install -y beekeeper-studio
 
-
-
 # Instalar POSTMAN
 wget https://dl.pstmn.io/download/latest/linux64 -O /tmp/postman.tar.gz
 tar -xzf /tmp/postman.tar.gz -C /opt
@@ -133,3 +131,4 @@ apt autoremove -y
 apt clean
 
 echo "==== Finalizado com sucesso ===="
+
