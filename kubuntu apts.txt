@@ -1,16 +1,13 @@
-vulkan ?? para jogos no kubuntu não sei se já vem
 Minecraft
 Steam
 lunar cliente
 spotify
-adicionar chromium
 VLC 
-Microsoft words online
-Docker desktop
+Docker 
 virtual machines environments
-visual studio com c# ou c++ já nsei
-visual studio code python , c , nodejs, typescript
-powerbi
+visual studio
+python c c++ etc
 postman
-base de dados
+base de dados 
 GitHub
+
