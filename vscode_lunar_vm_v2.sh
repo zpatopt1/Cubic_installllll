@@ -15,7 +15,7 @@ apt install -y vlc
 
 # Instala LibreWolf
 apt update
-app install extrepo -y
+apt install extrepo -y
 extrepo enable librewolf
 apt update
 apt install librewolf -y
@@ -194,3 +194,4 @@ apt autoremove -y
 apt clean
 
 echo "==== Finalizado com sucesso ===="
+
