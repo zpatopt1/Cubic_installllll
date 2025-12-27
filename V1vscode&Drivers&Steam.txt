@@ -6,8 +6,18 @@ apt upgrade -y
 # Remove o Haruna completamente
 apt remove --purge haruna -y
 
+# Remover Firefox 
+apt remove --purge firefox -y
+
 # Instala VLC
 apt install -y vlc
+
+# Instala LibreWolf
+apt update
+app install extrepo -y
+extrepo enable librewolf
+apt update
+apt install librewolf -y
 
 # Instala QBITTORENT
 apt install -y qbittorrent
@@ -216,6 +226,7 @@ EOF
 
 # Habilitar o serviço
 systemctl enable install-drivers.service
+
 
 
 
