@@ -131,4 +131,3 @@ apt autoremove -y
 apt clean
 
 echo "==== Finalizado com sucesso ===="
-
