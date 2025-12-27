@@ -1,0 +1,83 @@
+
+# SCRIPT PARA INSTALAR OS DRIVERS
+
+wget -O /usr/local/bin/install-drivers.sh https://github.com/SEUUSUARIO/SEUREPO/install-drivers.sh
+
+chmod +x /usr/local/bin/install-drivers.sh
+
+cat <<'EOF' > /etc/systemd/system/install-drivers.service
+[Unit]
+Description=Instalar driver NVIDIA automaticamente no primeiro boot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/install-drivers.sh
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable install-drivers.service
+
+cat <<'EOF' > /usr/local/bin/install-drivers.sh
+#!/bin/bash
+set -e
+# Atualiza lista de pacotes
+apt update
+# Instala automaticamente drivers detectados
+ubuntu-drivers install
+
+systemctl disable install-drivers.service
+# Remove este script após a execução
+rm -f /usr/local/bin/install-drivers.sh
+EOF
+
+chmod +x /usr/local/bin/install-drivers.sh
+
+cat <<'EOF' > /etc/systemd/system/install-drivers.service
+[Unit]
+Description=Instalar drivers automaticamente no primeiro boot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/install-drivers.sh
+RemainAfterExit=no
+
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Habilitar o serviço
+systemctl enable install-drivers.service
+
+
+
+#!/bin/bash
+set -e
+
+apt update
+
+# Instala automaticamente o melhor driver NVIDIA
+ubuntu-drivers install nvidia
+
+# Desativa serviço e limpa
+systemctl disable install-drivers.service
+rm -f /usr/local/bin/install-drivers.sh
+
+
+
+
+
+
+
+
+
+
+
+
+
