@@ -222,9 +222,9 @@ EOF
 # Habilitar o serviço
 systemctl enable install-drivers.service
 
-
 apt autoremove -y
 apt clean
+
 
 
 
