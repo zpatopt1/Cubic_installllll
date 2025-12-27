@@ -17,10 +17,11 @@ apt install -y qbittorrent
 apt install -y git
 
 # Instala SPOTIFY
+apt install -y curl apt-transport-https gnupg
 curl -sS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc | gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb https://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list
 apt update
-apt install spotify-client
+apt install -y spotify-client
 
 # Instalar BEEKEPER
 # Install our GPG key
@@ -131,3 +132,4 @@ apt autoremove -y
 apt clean
 
 echo "==== Finalizado com sucesso ===="
+
