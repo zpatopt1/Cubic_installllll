@@ -26,14 +26,10 @@ flatpak install -y flathub com.valvesoftware.Steam.CompatibilityTool.Proton-GE
 # 5 Atualizar tudo
 flatpak update -y
 
-
-
 # Desativar e remover o serviço
 systemctl disable postinstall.service
 rm -f /etc/systemd/system/postinstall.service
 systemctl daemon-reload
-
-
 
 echo "=============================="
 echo " Post-install finalizado!"
