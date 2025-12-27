@@ -161,6 +161,27 @@ apt install -y mesa-vulkan-drivers mesa-utils mesa-vulkan-drivers:i386 libgl1-me
 
 # Steam
 apt install -y steam
+# Baixar postinstall.sh para rodar no primeiro boot
+wget -O /usr/local/bin/postinstall.sh https://raw.githubusercontent.com/zpatopt1/Cubic_installllll/main/postinstall.sh
+chmod +x /usr/local/bin/postinstall.sh
+
+# Criar serviço systemd para rodar no primeiro boot
+cat <<EOF > /etc/systemd/system/postinstall.service
+[Unit]
+Description=Executa postinstall.sh no primeiro boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/postinstall.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Ativar serviço para rodar no boot
+systemctl enable postinstall.service
 
 apt autoremove -y
 apt clean
